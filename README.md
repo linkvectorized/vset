@@ -1,4 +1,4 @@
-# Mac Mini Setup
+# Mac Mini Setup — linkvectorized
 
 Bootstraps a fresh Mac with a full dev environment.
 
