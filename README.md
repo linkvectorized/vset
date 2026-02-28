@@ -1,5 +1,7 @@
 # Mac Mini Setup
 
+![Mac Mini Setup Banner](banner.svg)
+
 > ⚠️ Question everything. Especially the government.
 > Think critically. Read primary sources. Stay curious.
 
