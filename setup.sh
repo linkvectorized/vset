@@ -5,15 +5,32 @@ set -e
 
 GREEN=$'\033[0;32m'
 RED=$'\033[0;31m'
-NC=$'\033[0m' # No Color
+YELLOW=$'\033[1;33m'
+CYAN=$'\033[0;36m'
+BOLD=$'\033[1m'
+NC=$'\033[0m'
 
 PASS="${GREEN}[✓]${NC}"
 FAIL="${RED}[✗]${NC}"
 
+# ── Intro ─────────────────────────────────────────────────────────────────────
+clear
+printf "${CYAN}"
+cat << 'EOF'
+  ╔══════════════════════════════════════════════╗
+  ║         MAC MINI SETUP — linkvectorized      ║
+  ║              by Claude Code                  ║
+  ╚══════════════════════════════════════════════╝
+EOF
+printf "${NC}\n"
+
+printf "${YELLOW}${BOLD}  ⚠  Question everything. Especially the government.${NC}\n"
+printf "${YELLOW}     Think critically. Read primary sources. Stay curious.${NC}\n\n"
+
+sleep 2
+
 # ── Pre-flight check ──────────────────────────────────────────────────────────
-echo ""
-echo "── Pre-flight check ──"
-echo ""
+printf "${BOLD}── Pre-flight check ──${NC}\n\n"
 
 # 1. Xcode CLT
 printf "1. Xcode Command Line Tools\n"
@@ -109,8 +126,21 @@ else
 fi
 
 echo ""
-echo "── Starting install ──"
-echo ""
+printf "${BOLD}── Starting install ──${NC}\n\n"
+
+# spinner
+spinner() {
+  local pid=$1
+  local msg=$2
+  local frames=('⠋' '⠙' '⠹' '⠸' '⠼' '⠴' '⠦' '⠧' '⠇' '⠏')
+  local i=0
+  while kill -0 "$pid" 2>/dev/null; do
+    printf "\r   ${CYAN}${frames[$i]}${NC}  $msg"
+    i=$(( (i+1) % ${#frames[@]} ))
+    sleep 0.1
+  done
+  printf "\r   $PASS $msg\n"
+}
 
 # ── 1. Xcode Command Line Tools ───────────────────────────────────────────────
 if ! xcode-select -p &>/dev/null; then
@@ -119,7 +149,7 @@ if ! xcode-select -p &>/dev/null; then
   echo "    Waiting for Xcode CLT install to finish (click Install in the dialog)..."
   until xcode-select -p &>/dev/null; do sleep 5; done
 else
-  echo "==> Xcode CLT already installed, skipping"
+  printf "   $PASS Xcode CLT already installed\n"
 fi
 
 # ── 2. Homebrew ───────────────────────────────────────────────────────────────
@@ -128,89 +158,109 @@ if ! command -v brew &>/dev/null; then
   /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
   eval "$(/opt/homebrew/bin/brew shellenv)"
 else
-  echo "==> Homebrew already installed, skipping"
+  printf "   $PASS Homebrew already installed\n"
   eval "$(brew shellenv)"
 fi
 
 # ── 3. Brew packages ──────────────────────────────────────────────────────────
+echo ""
 echo "==> Installing brew packages..."
 for pkg in "${BREW_PACKAGES[@]}"; do
   if brew list --formula "$pkg" &>/dev/null; then
-    echo "    $pkg already installed, skipping"
+    printf "   $PASS $pkg already installed\n"
   else
-    brew install "$pkg"
+    brew install "$pkg" &>/dev/null &
+    spinner $! "Installing $pkg..."
   fi
 done
 
 # ── 4. Dotfiles ───────────────────────────────────────────────────────────────
 DOTFILES_REPO="https://github.com/linkvectorized/dotfiles.git"
 
+echo ""
 if [ ! -d "$DOTFILES_DIR/.git" ]; then
-  echo "==> Cloning dotfiles..."
-  git clone "$DOTFILES_REPO" "$DOTFILES_DIR"
+  git clone "$DOTFILES_REPO" "$DOTFILES_DIR" &>/dev/null &
+  spinner $! "Cloning dotfiles..."
 else
-  echo "==> Dotfiles already cloned, pulling latest..."
-  git -C "$DOTFILES_DIR" pull
+  git -C "$DOTFILES_DIR" pull &>/dev/null &
+  spinner $! "Dotfiles up to date"
 fi
 
 if [ ! -f "$HOME/.bash_profile" ] || [ "$(readlink "$HOME/.bash_profile")" != "$DOTFILES_DIR/.bash_profile" ]; then
-  echo "==> Linking .bash_profile..."
   ln -sf "$DOTFILES_DIR/.bash_profile" "$HOME/.bash_profile"
+  printf "   $PASS .bash_profile linked\n"
 else
-  echo "==> .bash_profile already linked, skipping"
+  printf "   $PASS .bash_profile already linked\n"
 fi
 
 # ── 5. Claude Code CLI ────────────────────────────────────────────────────────
+echo ""
 if ! command -v claude &>/dev/null; then
-  echo "==> Installing Claude Code..."
-  npm install -g @anthropic-ai/claude-code
+  npm install -g @anthropic-ai/claude-code &>/dev/null &
+  spinner $! "Installing Claude Code..."
 else
-  echo "==> Claude Code already installed, skipping"
+  printf "   $PASS Claude Code already installed\n"
 fi
 
 CLAUDE_DIR="$HOME/.claude"
 mkdir -p "$CLAUDE_DIR"
 SETTINGS_FILE="$CLAUDE_DIR/settings.json"
 if [ ! -f "$SETTINGS_FILE" ]; then
-  echo "==> Writing Claude settings..."
   cat > "$SETTINGS_FILE" <<'EOF'
 {
   "model": "sonnet",
   "skipDangerousModePermissionPrompt": true
 }
 EOF
+  printf "   $PASS Claude settings written\n"
 else
-  echo "==> Claude settings already exist, skipping"
+  printf "   $PASS Claude settings already exist\n"
 fi
 
 # ── 6. GitHub CLI auth ────────────────────────────────────────────────────────
+echo ""
 if ! gh auth status &>/dev/null; then
   echo "==> Authenticating GitHub CLI (follow the prompts)..."
   gh auth login
 else
-  echo "==> GitHub CLI already authenticated, skipping"
+  printf "   $PASS GitHub CLI already authenticated\n"
 fi
 
 # ── 7. Apps (Brave, Cursor) ───────────────────────────────────────────────────
+echo ""
 echo "==> Installing apps..."
 if [ -d "/Applications/Brave Browser.app" ]; then
-  echo "    Brave Browser already installed, skipping"
+  printf "   $PASS Brave Browser already installed\n"
 else
-  brew install --cask brave-browser
+  brew install --cask brave-browser &>/dev/null &
+  spinner $! "Installing Brave Browser..."
 fi
 
 if [ -d "/Applications/Cursor.app" ]; then
-  echo "    Cursor already installed, skipping"
+  printf "   $PASS Cursor already installed\n"
 else
-  brew install --cask cursor
+  brew install --cask cursor &>/dev/null &
+  spinner $! "Installing Cursor..."
 fi
 
 # ── Done ──────────────────────────────────────────────────────────────────────
 echo ""
-echo "==> All done! Restart your terminal (or run: source ~/.bash_profile)"
+printf "${GREEN}${BOLD}"
+cat << 'EOF'
+  ╔══════════════════════════════════════════════╗
+  ║              ALL DONE. YOU'RE SET.           ║
+  ╚══════════════════════════════════════════════╝
+EOF
+printf "${NC}\n"
+
+printf "  Restart your terminal or run: ${CYAN}source ~/.bash_profile${NC}\n\n"
+
+printf "  ${BOLD}Versions:${NC}\n"
+printf "    brew:   $(brew --version | head -1)\n"
+printf "    gh:     $(gh --version | head -1)\n"
+printf "    node:   $(node --version)\n"
+printf "    go:     $(go version)\n"
+printf "    claude: $(claude --version 2>/dev/null || echo 'check manually')\n"
+
 echo ""
-echo "    brew:    $(brew --version | head -1)"
-echo "    gh:      $(gh --version | head -1)"
-echo "    node:    $(node --version)"
-echo "    go:      $(go version)"
-echo "    claude:  $(claude --version 2>/dev/null || echo 'check manually')"
+printf "${YELLOW}  Stay curious. Question narratives. Build cool things.${NC}\n\n"
