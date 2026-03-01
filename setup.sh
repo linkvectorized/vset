@@ -269,7 +269,8 @@ cat << 'EOF'
 EOF
 printf "${NC}\n"
 
-printf "  Restart your terminal or run: ${CYAN}source ~/.bash_profile${NC}\n\n"
+source ~/.bash_profile 2>/dev/null || true
+printf "  ${CYAN}source ~/.bash_profile${NC} applied — restart terminal to get bash 5 as login shell\n\n"
 
 printf "  ${BOLD}Versions:${NC}\n"
 printf "    brew:   $(brew --version | head -1)\n"
