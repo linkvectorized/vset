@@ -81,6 +81,12 @@ else
   printf "   $FAIL .bash_profile not found — will link\n"
 fi
 
+if [ "$SHELL" = "/bin/bash" ]; then
+  printf "   $PASS default shell is already bash\n"
+else
+  printf "   $FAIL default shell is $SHELL — will switch to /bin/bash\n"
+fi
+
 echo ""
 
 # 5. Claude Code
@@ -190,6 +196,13 @@ if [ ! -f "$HOME/.bash_profile" ] || [ "$(readlink "$HOME/.bash_profile")" != "$
   printf "   $PASS .bash_profile linked\n"
 else
   printf "   $PASS .bash_profile already linked\n"
+fi
+
+if [ "$SHELL" != "/bin/bash" ]; then
+  chsh -s /bin/bash
+  printf "   $PASS default shell switched to bash — restart terminal after setup\n"
+else
+  printf "   $PASS default shell is already bash\n"
 fi
 
 # ── 5. Claude Code CLI ────────────────────────────────────────────────────────

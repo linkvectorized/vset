@@ -22,6 +22,7 @@ Bootstraps a fresh Mac with a full dev environment.
 - Claude Code
 - Brave Browser
 - Cursor
+- Switches default shell to bash (macOS defaults to zsh — this script is bash-based)
 
 ## Run it
 
@@ -31,10 +32,11 @@ bash <(curl -fsSL https://raw.githubusercontent.com/linkvectorized/mac-mini-setu
 
 ## What you'll need
 
-Two things that can't be automated — you'll be prompted for these during the run:
+A few things that can't be automated — you'll be prompted for these during the run:
 
 - **GitHub account** — for `gh auth login`
 - **Anthropic API key** — for Claude Code (get one at https://console.anthropic.com)
+- **Password** — for `chsh` when switching the default shell to bash
 
 ---
 
