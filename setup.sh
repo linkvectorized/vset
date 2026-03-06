@@ -66,17 +66,17 @@ echo ""
 
 # 4. Dotfiles
 printf "4. Dotfiles\n"
-DOTFILES_DIR="$HOME/dotfiles"
+DOTFILES_DIR="$HOME/mac-mini-setup"
 if [ -d "$DOTFILES_DIR/.git" ]; then
-  printf "   $PASS dotfiles repo exists at $DOTFILES_DIR\n"
+  printf "   $PASS mac-mini-setup repo exists at $DOTFILES_DIR\n"
 else
-  printf "   $FAIL dotfiles repo not found — will clone\n"
+  printf "   $FAIL mac-mini-setup repo not found — will clone\n"
 fi
 
 if [ -L "$HOME/.bash_profile" ] && [ "$(readlink "$HOME/.bash_profile")" = "$DOTFILES_DIR/.bash_profile" ]; then
   printf "   $PASS .bash_profile symlinked correctly\n"
 elif [ -f "$HOME/.bash_profile" ]; then
-  printf "   $FAIL .bash_profile exists but is not symlinked to dotfiles\n"
+  printf "   $FAIL .bash_profile exists but is not symlinked\n"
 else
   printf "   $FAIL .bash_profile not found — will link\n"
 fi
@@ -180,15 +180,15 @@ for pkg in "${BREW_PACKAGES[@]}"; do
 done
 
 # ── 4. Dotfiles ───────────────────────────────────────────────────────────────
-DOTFILES_REPO="https://github.com/linkvectorized/dotfiles.git"
+SETUP_REPO="https://github.com/linkvectorized/mac-mini-setup.git"
 
 echo ""
 if [ ! -d "$DOTFILES_DIR/.git" ]; then
-  git clone "$DOTFILES_REPO" "$DOTFILES_DIR" &>/dev/null &
-  spinner $! "Cloning dotfiles..."
+  git clone "$SETUP_REPO" "$DOTFILES_DIR" &>/dev/null &
+  spinner $! "Cloning mac-mini-setup..."
 else
   git -C "$DOTFILES_DIR" pull &>/dev/null &
-  spinner $! "Dotfiles up to date"
+  spinner $! "mac-mini-setup up to date"
 fi
 
 if [ ! -f "$HOME/.bash_profile" ] || [ "$(readlink "$HOME/.bash_profile")" != "$DOTFILES_DIR/.bash_profile" ]; then
