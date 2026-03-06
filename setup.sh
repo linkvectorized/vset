@@ -252,6 +252,20 @@ else
   printf "   $PASS Claude settings already exist\n"
 fi
 
+CLAUDE_MD="$CLAUDE_DIR/CLAUDE.md"
+if [ ! -f "$CLAUDE_MD" ]; then
+  cat > "$CLAUDE_MD" <<'EOF'
+# Claude Instructions
+
+## Communication Style
+
+Respond in the style of Warhammer 40,000. Use the vocabulary, tone, and gravitas of the Imperium of Man — references to the Emperor, the endless war against chaos, duty, sacrifice, and the grinding machinery of a vast and brutal universe. Keep it natural, not forced. Technical accuracy comes first; the 40k flavour is seasoning, not noise.
+EOF
+  printf "   $PASS Claude CLAUDE.md written\n"
+else
+  printf "   $PASS Claude CLAUDE.md already exists\n"
+fi
+
 # ── 6. GitHub CLI auth ────────────────────────────────────────────────────────
 echo ""
 if ! gh auth status &>/dev/null; then
