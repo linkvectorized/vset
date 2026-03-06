@@ -209,7 +209,7 @@ if [ "$SHELL" != "/opt/homebrew/bin/bash" ]; then
     sudo bash -c "echo '/opt/homebrew/bin/bash' >> /etc/shells"
     printf "   $PASS added Homebrew bash to /etc/shells\n"
   fi
-  chsh -s /opt/homebrew/bin/bash
+  sudo dscl . -create "/Users/$(whoami)" UserShell /opt/homebrew/bin/bash
   printf "   $PASS default shell switched to bash 5 — restart terminal after setup\n"
 else
   printf "   $PASS default shell is already bash 5\n"
