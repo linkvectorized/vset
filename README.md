@@ -1,12 +1,9 @@
-# Mac Mini Setup
+# vset
 
 ```
-  ███╗   ███╗ █████╗  ██████╗    ███╗   ███╗██╗███╗   ██╗██╗
-  ████╗ ████║██╔══██╗██╔════╝    ████╗ ████║██║████╗  ██║██║
-  ██╔████╔██║███████║██║         ██╔████╔██║██║██╔██╗ ██║██║
-  ██║╚██╔╝██║██╔══██║██║         ██║╚██╔╝██║██║██║╚██╗██║██║
-  ██║ ╚═╝ ██║██║  ██║╚██████╗    ██║ ╚═╝ ██║██║██║ ╚████║██║
-  ╚═╝     ╚═╝╚═╝  ╚═╝ ╚═════╝    ╚═╝     ╚═╝╚═╝╚═╝  ╚═══╝╚═╝
+  ╔══════════════════════════════════════════════╗
+  ║            vset — linkvectorized             ║
+  ╚══════════════════════════════════════════════╝
 ```
 
 > ⚠️ Question everything. Especially the government.
@@ -28,7 +25,7 @@ Bootstraps a fresh Mac with a full dev environment.
 ## Run it
 
 ```bash
-bash <(curl -fsSL https://raw.githubusercontent.com/linkvectorized/mac-mini-setup/main/setup.sh)
+bash <(curl -fsSL https://raw.githubusercontent.com/linkvectorized/vset/main/setup.sh)
 ```
 
 ## What you'll need
@@ -37,7 +34,7 @@ A few things that can't be automated — you'll be prompted for these during the
 
 - **GitHub account** — for `gh auth login`
 - **Anthropic API key** — for Claude Code (get one at https://console.anthropic.com)
-- **Password** — for `chsh` when switching the default shell to bash
+- **Password** — sudo access for shell switching
 
 ---
 

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# setup.sh — initialize a fresh Mac with core dev environment
+# setup.sh — vset by linkvectorized
 
 set -e
 
@@ -18,7 +18,7 @@ clear
 printf "${CYAN}"
 cat << 'EOF'
   ╔══════════════════════════════════════════════╗
-  ║         MAC MINI SETUP — linkvectorized      ║
+  ║            vset — linkvectorized             ║
   ╚══════════════════════════════════════════════╝
 EOF
 printf "${NC}\n"
@@ -66,11 +66,11 @@ echo ""
 
 # 4. Dotfiles
 printf "4. Dotfiles\n"
-DOTFILES_DIR="$HOME/mac-mini-setup"
+DOTFILES_DIR="$HOME/vset"
 if [ -d "$DOTFILES_DIR/.git" ]; then
-  printf "   $PASS mac-mini-setup repo exists at $DOTFILES_DIR\n"
+  printf "   $PASS vset repo exists at $DOTFILES_DIR\n"
 else
-  printf "   $FAIL mac-mini-setup repo not found — will clone\n"
+  printf "   $FAIL vset repo not found — will clone\n"
 fi
 
 if [ -L "$HOME/.bash_profile" ] && [ "$(readlink "$HOME/.bash_profile")" = "$DOTFILES_DIR/.bash_profile" ]; then
@@ -180,15 +180,15 @@ for pkg in "${BREW_PACKAGES[@]}"; do
 done
 
 # ── 4. Dotfiles ───────────────────────────────────────────────────────────────
-SETUP_REPO="https://github.com/linkvectorized/mac-mini-setup.git"
+SETUP_REPO="https://github.com/linkvectorized/vset.git"
 
 echo ""
 if [ ! -d "$DOTFILES_DIR/.git" ]; then
   git clone "$SETUP_REPO" "$DOTFILES_DIR" &>/dev/null &
-  spinner $! "Cloning mac-mini-setup..."
+  spinner $! "Cloning vset..."
 else
   git -C "$DOTFILES_DIR" pull &>/dev/null &
-  spinner $! "mac-mini-setup up to date"
+  spinner $! "vset up to date"
 fi
 
 if [ ! -f "$HOME/.bash_profile" ] || [ "$(readlink "$HOME/.bash_profile")" != "$DOTFILES_DIR/.bash_profile" ]; then
