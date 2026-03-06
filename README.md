@@ -18,11 +18,12 @@ Bootstraps a fresh Mac with a full dev environment.
 
 - Xcode Command Line Tools
 - Homebrew
-- gh, node, go, jq, git
+- bash 5, gh, node, go, jq, git
 - Claude Code
 - Brave Browser
 - Cursor
-- Installs bash 5 via Homebrew and sets it as the default shell (macOS ships bash 3.2 due to licensing — this gets you the real thing)
+- Bitwarden
+- Sets bash 5 as the default shell (macOS ships bash 3.2 due to licensing)
 
 ## Run it
 
